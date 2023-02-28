@@ -18,9 +18,17 @@ bool Client::start_client(){
         if (transfer_info == true){
             SocketHandler* socket_handler = new SocketHandler(this->address, this->port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
+            std::string name = "hadar";
+            // int* buf = convert_string_to_hex(name);
 
-            uint8_t tempBuffer[PACKET_SIZE] = { 9 };
-            socket_handler->send(tempBuffer, sizeof(tempBuffer));
+            std::byte bytes[name.length()];
+            std::memcpy(bytes, name.data(), name.length());
+
+            socket_handler->send(*reinterpret_cast<int*>(bytes), sizeof(bytes));
+            
+            //0x68,0x61,0x64,0x61,0x72~> Hadar
+            // uint8_t tempBuffer[5] = buf;
+            // socket_handler->send(tempBuffer, sizeof(tempBuffer));
 
             // First registration
             // req_res_handler->registration_request(name);
@@ -31,6 +39,13 @@ bool Client::start_client(){
     //transfer = Client:get_transfer_info();
 }
 
+// int convert_string_to_hex(std::string s){
+//     int buffer[s.length() * 8]; // 8 bytes per char
+//     for(int i=0; i<sizeof(s); i++){
+//         buffer[i] = int(s[i]);
+//     }
+//     return buffer;
+// }
 
 
 
