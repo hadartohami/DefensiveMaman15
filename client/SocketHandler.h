@@ -1,6 +1,8 @@
 #ifndef SOCKETHANDLER_H_
 #define SOCKETHANDLER_H_
 #include <iostream>
+#include <boost/asio.hpp>
+
 using boost::asio::ip::tcp;
 
 constexpr size_t PACKET_SIZE = 1024;
