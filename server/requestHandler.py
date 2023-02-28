@@ -20,15 +20,16 @@ class RequestHandler:
 
     def handler_headers(self, data):
         try:
-            self.client_id = struct.unpack(f"<{CLIENT_ID_SIZE}s", data[:CLIENT_ID_SIZE])[0]
+            self.client_id = struct.unpack(
+                f"<{CLIENT_ID_SIZE}s", data[:CLIENT_ID_SIZE])[0]
             header_data = data[CLIENT_ID_SIZE:CLIENT_ID_SIZE + HEADER_SIZE]
-            self.version, self.code, self.payload_size = struct.unpack("<BHL", header_data)
-            #nameData = data[self.header_size:self.header_size]
-            #self.payload_data = str(struct.unpack("<BHL", nameData)[0].partition(b'\0')[0].decode('utf-8'))
+            self.version, self.code, self.payload_size = struct.unpack(
+                "<BHL", header_data)
+            # nameData = data[self.header_size:self.header_size]
+            # self.payload_data = str(struct.unpack("<BHL", nameData)[0].partition(b'\0')[0].decode('utf-8'))
             return True
         except Exception as e:
             return False
 
     def print_headers(self):
         print(self.client_id, self.code, self.payload_size)
-

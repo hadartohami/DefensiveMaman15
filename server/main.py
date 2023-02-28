@@ -32,12 +32,10 @@ def main():
     else:
         print("Client with name: {} already exist".format(name))
 
-    #clients = d.get_clients()
-    #print(clients)
+    # clients = d.get_clients()
+    # print(clients)
     server.start()
 
 
 if __name__ == '__main__':
     main()
-
-

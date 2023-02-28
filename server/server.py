@@ -29,7 +29,7 @@ class Server:
             print(e)
 
     def accept(self, sock, mask):
-        conn, addr = sock.accept() # Should be ready
+        conn, addr = sock.accept()  # Should be ready
         print('accepted', conn, 'from', addr)
         conn.setblocking(False)
         self.sel.register(conn, selectors.EVENT_READ, self.read)

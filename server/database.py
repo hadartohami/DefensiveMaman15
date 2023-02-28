@@ -67,7 +67,7 @@ class Database:
               FOREIGN KEY(ID) REFERENCES {CLIENTS_TABLE}(ID),
             );
             """)
-            
+
     def insert_client(self, client):
         if not type(client) is Client:
             return False
@@ -75,11 +75,11 @@ class Database:
                             [client.id, client.name, client.public_key, client.last_seen, client.AES_key], True)
 
     def check_if_client_exist(self, name):
-        client = self.execute(f"SELECT Name FROM {CLIENTS_TABLE} WHERE Name = ?", [name])
+        client = self.execute(
+            f"SELECT Name FROM {CLIENTS_TABLE} WHERE Name = ?", [name])
         if not client:
             return False
         return True
 
     def get_clients(self):
         return self.execute(f"SELECT ID, Name FROM {CLIENTS_TABLE}", [])
-
