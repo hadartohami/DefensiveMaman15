@@ -24,20 +24,22 @@ bool RequestResponseHandler::check_name(std::string name) {
     return true;
 }
 
-ostream& operator<<(ostream& os, const RegistrationRequest& req)
-{
-   return os << "payload: " << "ddcbfghfhf" << endl;
-}
+// ostream& operator<<(ostream& os, const RegistrationRequest& req)
+// {
+//    return os << "payload: " << "ddcbfghfhf" << endl;
+// }
 
 bool RequestResponseHandler::registration_request(std::string name){
-    RegistrationRequest req;
-    req.header(REGISTRATION_CODE);
+    //RegistrationRequest req(REGISTRATION_CODE);
+    //req.header.code = REGISTRATION_CODE);
     if (!check_name(name)){
         return false;
     }
-    req.header.payload_size = sizeof(req.payload);
+    //req.header.payload_size = sizeof(req.payload);
     //strcpy(treq.payload.client_name, CLIENT_NAME_SIZE, name.c_str());
-    std::cout << req;
-    // sHandler->send_and_re`ceive()
+    //std::cout << req;
+    // sHandler->send_and_receive()
+    std::cout << "hola hchaaaaami" << std::endl;
     return true;
+    
 }

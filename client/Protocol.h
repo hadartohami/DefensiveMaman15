@@ -26,7 +26,7 @@ struct RequestHeader {
 };
 
 struct RegistrationRequest {
-    RequestHeader header(code_t);
+    RequestHeader header;
     struct {
         std::string client_name;
     }payload;

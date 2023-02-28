@@ -52,7 +52,7 @@ bool Client::get_transfer_info() {
         return true;
     }
     else {
-        std::cout << "Couldn't Open file: " << TRANSFER_INFO << std::endl;
+        std::cout << "[ X ] Couldn't Open file: " << TRANSFER_INFO << std::endl;
         return false;
     }
 }
@@ -80,7 +80,7 @@ bool Client::get_client_info() {
         return true;
     }
     else {
-        std::cout << "Couldn't Open file: " << CLIENT_INFO << std::endl;
+        std::cout << "[ X ] Couldn't Open file: " << CLIENT_INFO << std::endl;
         return false;
     }
 }

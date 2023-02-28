@@ -5,8 +5,8 @@
 #include <boost/asio.hpp>
 
 
-const char* CLIENT_INFO = "me.info";
-const char* TRANSFER_INFO = "transfer.info";
+const char* CLIENT_INFO = "../client/me.info";
+const char* TRANSFER_INFO = "../client/transfer.info";
 
 // Class that represents a Client
 class Client{
