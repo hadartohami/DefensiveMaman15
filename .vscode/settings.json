@@ -2,5 +2,6 @@
     "files.associations": {
         "iostream": "cpp",
         "*.ipp": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/client"
 }
