@@ -1,3 +1,0 @@
-/Users/htohami/CLionProjects/maman15/main.cpp/cmake-build-debug/CMakeFiles/main_cpp.dir
-/Users/htohami/CLionProjects/maman15/main.cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/htohami/CLionProjects/maman15/main.cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
