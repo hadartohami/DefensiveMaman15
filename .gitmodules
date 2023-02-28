@@ -1,3 +1,0 @@
-[submodule "client/3rd-party"]
-	path = client/3rd-party
-	url = https://github.com/steinwurf/boost.git
