@@ -1,7 +1,7 @@
 #include "SocketHandler.h"
 #include <iostream>
 
-SocketHandler::SocketHandler(std::string a, std::string p): address(a), port(p){
+SocketHandler::SocketHandler(std::string address, std::string port): address(address), port(port){
 }
 
 SocketHandler::~SocketHandler(){

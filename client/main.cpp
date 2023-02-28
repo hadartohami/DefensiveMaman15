@@ -5,7 +5,7 @@
 
 
 int main() {
-    std::string name = "hadar";
+    std::string name = "Hadar";
     std::cout << "[ + ] Client started" << std::endl;
     Client *c = new Client(name);
     //c->print_client_info();

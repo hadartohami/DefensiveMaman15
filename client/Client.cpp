@@ -11,14 +11,18 @@ Client::~Client(){
 }
 
 bool Client::start_client(){
+    std::cout << "[ DEBUG ] start_client" << std::endl;
     bool client_info = get_client_info();
     if( client_info == false){
         bool transfer_info = get_transfer_info();
         if (transfer_info == true){
-            SocketHandler* socket_handler = new SocketHandler(address, port);
+            SocketHandler* socket_handler = new SocketHandler(this->address, this->port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
-            // first registration
+            
+            // First registration
             req_res_handler->registration_request(name);
+        }else{
+            // TODO: exit(1) with error for no configurations
         }
     }
     //transfer = Client:get_transfer_info();
@@ -47,7 +51,7 @@ bool Client::get_transfer_info() {
         this->name = info;
         std::getline(transfer, info);
         this->files_to_send.push_back(info);
-        std::cout << "Send to Server in Address: " << address << ", In Port: " << port << std::endl;
+        std::cout << "[ + ] Calling server at " << address << ":" << port << "..." << std::endl;
         transfer.close();
         return true;
     }
@@ -73,9 +77,9 @@ bool Client::get_client_info() {
         std::getline(client, info);
         const auto private_key = info;
         this->private_key = private_key;
-        std::cout << "Client Name: " << client_name << std::endl;
-        std::cout << "Client UUID: " << uuid << std::endl;
-        std::cout << "Client Private Key: " << private_key << std::endl;
+        std::cout << "[ DEBUG ] Client Name: " << client_name << std::endl;
+        std::cout << "[ DEBUG ] Client UUID: " << uuid << std::endl;
+        std::cout << "[ DEBUG ] Client Private Key: " << private_key << std::endl;
         client.close();
         return true;
     }

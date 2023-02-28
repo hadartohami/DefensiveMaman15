@@ -30,6 +30,7 @@ bool RequestResponseHandler::check_name(std::string name) {
 // }
 
 bool RequestResponseHandler::registration_request(std::string name){
+    std::cout << "IN REGIS REQUEST";
     //RegistrationRequest req(REGISTRATION_CODE);
     //req.header.code = REGISTRATION_CODE);
     if (!check_name(name)){

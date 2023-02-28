@@ -5,7 +5,7 @@
 #include <boost/asio.hpp>
 
 
-const char* CLIENT_INFO = "../client/me.info";
+const char* CLIENT_INFO = "/client/me.info"; // this doesn't work to wotk with transfer.info
 const char* TRANSFER_INFO = "../client/transfer.info";
 
 // Class that represents a Client
