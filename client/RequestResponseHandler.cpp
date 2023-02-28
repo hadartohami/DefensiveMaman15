@@ -31,6 +31,14 @@ bool RequestResponseHandler::registration_request(std::string name){
     }
     req.header.payload_size = sizeof(req.payload);
     strcpy_s(req.payload.client_name, CLIENT_NAME_SIZE, name.c_str());
-    sHandler->send_and_receive(reinterpret_cast<const uint8_t* const>(&req), sizeof(req),
-                                reinterpret_cast<uint8_t* const>(&response), sizeof(response)))
+    std::count << req;
+    // sHandler->send_and_receive()
+    return true;
+}
+
+ostream& operator << (ostream& os, const RegistrationRequest& req)
+{
+   return os << "header_code: " << req.header.code <<
+              "version: " << req.header.version << 
+              << " Payload:" << req.payload << endl;
 }
