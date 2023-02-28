@@ -2,12 +2,13 @@
 #include "Protocol.h"
 using namespace std;
 
-RequestResponseHandler::RequestResponseHandler(SocketHandler *s): sHandler(s){
+RequestResponseHandler::RequestResponseHandler(SocketHandler *s): socketHandler(s){
+    // TODO: this should happen before emitting requests
     try{
         s->connect();
     }
     catch (const std::exception &e) {
-        std::cout << "Couldn't connect to Server" << std::endl;
+        std::cerr << "Couldn't connect to Server" << std::endl;
     }
 }
 
@@ -30,7 +31,7 @@ bool RequestResponseHandler::check_name(std::string name) {
 // }
 
 bool RequestResponseHandler::registration_request(std::string name){
-    std::cout << "IN REGIS REQUEST";
+    std::cout << "[ DEBUG ] in registration request" << std::endl;
     //RegistrationRequest req(REGISTRATION_CODE);
     //req.header.code = REGISTRATION_CODE);
     if (!check_name(name)){
@@ -39,8 +40,7 @@ bool RequestResponseHandler::registration_request(std::string name){
     //req.header.payload_size = sizeof(req.payload);
     //strcpy(treq.payload.client_name, CLIENT_NAME_SIZE, name.c_str());
     //std::cout << req;
-    // sHandler->send_and_receive()
-    std::cout << "hola hchaaaaami" << std::endl;
+    // socketHandler->send_and_receive()
     return true;
     
 }

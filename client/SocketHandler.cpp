@@ -7,17 +7,27 @@ SocketHandler::SocketHandler(std::string address, std::string port): address(add
 SocketHandler::~SocketHandler(){
 }
 
-
 bool SocketHandler::connect() {
     try {
-        io_context = new boost::asio::io_context;
-        resolver = new tcp::resolver(*io_context);
-        socket = new tcp::socket(*io_context);
-        boost::asio::connect(*socket, resolver->resolve(address, port));
-        socket->non_blocking(false);
-        connected = true;
+
+        // Get IO ctx
+        this->io_context = new boost::asio::io_context;
+
+        // Set ctx resolving
+        this->resolver = new tcp::resolver(*this->io_context);
+
+        // Connect to socket
+        this->socket = new tcp::socket(*this->io_context);
+        boost::asio::connect(*this->socket, this->resolver->resolve(address, port));
+
+        // Set non-blocking
+        this->socket->non_blocking(false);
+
+        // Mark for us
+        this->connected = true;
     }
     catch (const std::exception &e) {
+        std::cerr << "EXCEPTED IN sockethandler::connect";
         connected = false;
     }
     return connected;
@@ -35,19 +45,19 @@ void SocketHandler::close() {
         connected = false;
 }
 
-bool SocketHandler::check_connection(){
-    if (socket == nullptr || !connected)
+bool SocketHandler::is_connected(){
+    if (this->socket == nullptr || !this->connected)
         return false;
     return true;
 }
 
 bool SocketHandler::receive(uint8_t* const buffer, const size_t size){
-    if(check_connection() || buffer == nullptr || size == 0)
+    if(is_connected() || buffer == nullptr || size == 0)
         return false;
 
-    size_t bytesLeft = size;
-    uint8_t* ptr     = buffer;
-    while (bytesLeft > 0)
+    size_t num_of_bytes_to_send = size;
+    uint8_t* buffer_ptr     = buffer;
+    while (num_of_bytes_to_send > 0)
     {
         uint8_t tempBuffer[PACKET_SIZE] = { 0 };
 
@@ -62,44 +72,49 @@ bool SocketHandler::receive(uint8_t* const buffer, const size_t size){
 //            swapBytes(tempBuffer, bytesRead);
 //        }
 
-        const size_t bytesToCopy = (bytesLeft > bytesRead) ? bytesRead : bytesLeft;  // prevent buffer overflow.
-        memcpy(ptr, tempBuffer, bytesToCopy);
-        ptr       += bytesToCopy;
-        bytesLeft = (bytesLeft < bytesToCopy) ? 0 : (bytesLeft - bytesToCopy);  // unsigned protection.
+        const size_t bytesToCopy = (num_of_bytes_to_send > bytesRead) ? bytesRead : num_of_bytes_to_send;  // prevent buffer overflow.
+        memcpy(buffer_ptr, tempBuffer, bytesToCopy);
+        buffer_ptr       += bytesToCopy;
+        num_of_bytes_to_send = (num_of_bytes_to_send < bytesToCopy) ? 0 : (num_of_bytes_to_send - bytesToCopy);  // unsigned protection.
     }
 
     return true;
 }
 
 
-
-
-
 bool SocketHandler::send(const uint8_t* buffer, const size_t size){
-    if(check_connection() || buffer == nullptr || size == 0)
+    if(!is_connected() || buffer == nullptr || size == 0)
         return false;
-    size_t bytesLeft   = size;
-    const uint8_t* ptr = buffer;
-    while (bytesLeft > 0)
+    size_t num_of_bytes_to_send = size;
+    const uint8_t* buffer_ptr = buffer;
+    boost::system::error_code errorCode; 
+    while (num_of_bytes_to_send > 0)
     {
-        boost::system::error_code errorCode; // write() will not throw exception when error_code is passed as argument.
-        uint8_t tempBuffer[PACKET_SIZE] = { 0 };
-        const size_t bytesToSend = (bytesLeft > PACKET_SIZE) ? PACKET_SIZE : bytesLeft;
+        uint8_t tempBuffer[PACKET_SIZE] = { 0 }; // PACKET_SIZE = 1024; this inits an array with 0s
+        const size_t bytesToSend = (num_of_bytes_to_send > PACKET_SIZE) ? PACKET_SIZE : num_of_bytes_to_send; // Fitting the amount of bytes left to send
 
-        memcpy(tempBuffer, ptr, bytesToSend);
+        // TODO: make this safe copy omg
+        memcpy(tempBuffer, buffer_ptr, bytesToSend);
 
 //        if (_bigEndian)  // It's required to convert from big endian to little endian.
 //        {
 //            swapBytes(tempBuffer, bytesToSend);
 //        }
 
-        const size_t bytesWritten = write(*socket, boost::asio::buffer(tempBuffer, PACKET_SIZE), errorCode);
-        if (bytesWritten == 0)
+        const size_t bytesWritten = write(*socket, boost::asio::buffer(tempBuffer, PACKET_SIZE), errorCode); // write() will not throw exception when error_code is passed as argument.
+        if (bytesWritten == 0){
+            std::cout << "Wrote 0 bytes in socket handler";
             return false;
+        }
+        // TODO: check if errorCode is not null
+        // if (errorCode != NULL){
+        //     std::cout << "NULL WTF?! in send" << std::endl;
+        // }
 
-        ptr += bytesWritten;
-        bytesLeft = (bytesLeft < bytesWritten) ? 0 : (bytesLeft - bytesWritten);  // unsigned protection.
+        buffer_ptr += bytesWritten;
+        num_of_bytes_to_send = (num_of_bytes_to_send < bytesWritten) ? 0 : (num_of_bytes_to_send - bytesWritten);  // unsigned protection.
     }
+     std::cout << "Wrote all bytes in socket handler, returning";
     return true;
 }
 

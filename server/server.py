@@ -16,7 +16,7 @@ class Server:
         try:
             sock = socket.socket()
             sock.bind((self.host, int(self.port)))
-            sock.listen(100)
+            sock.listen()
             sock.setblocking(False)
             self.sel.register(sock, selectors.EVENT_READ, self.accept)
             print("Server is listening on port: {}".format(self.port))

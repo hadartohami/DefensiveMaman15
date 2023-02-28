@@ -18,16 +18,17 @@ bool Client::start_client(){
         if (transfer_info == true){
             SocketHandler* socket_handler = new SocketHandler(this->address, this->port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
-            
+
+            uint8_t tempBuffer[PACKET_SIZE] = { 9 };
+            socket_handler->send(tempBuffer, sizeof(tempBuffer));
+
             // First registration
-            req_res_handler->registration_request(name);
+            // req_res_handler->registration_request(name);
         }else{
             // TODO: exit(1) with error for no configurations
         }
     }
     //transfer = Client:get_transfer_info();
-
-
 }
 
 
