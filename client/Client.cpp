@@ -15,7 +15,7 @@ bool Client::start_client(){
     if( client_info == false){
         bool transfer_info = get_transfer_info();
         if (transfer_info == true){
-            SocketHandler* socket_handler = new SocketHandler(address,port);
+            SocketHandler* socket_handler = new SocketHandler(address, port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
             // first registration
             req_res_handler->registration_request(name);

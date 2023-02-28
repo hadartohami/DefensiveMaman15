@@ -1,5 +1,6 @@
 #include "RequestResponseHandler.h"
 #include "Protocol.h"
+using namespace std;
 
 RequestResponseHandler::RequestResponseHandler(SocketHandler *s): sHandler(s){
     try{
@@ -23,22 +24,20 @@ bool RequestResponseHandler::check_name(std::string name) {
     return true;
 }
 
+ostream& operator<<(ostream& os, const RegistrationRequest& req)
+{
+   return os << "payload: " << "ddcbfghfhf" << endl;
+}
 
 bool RequestResponseHandler::registration_request(std::string name){
     RegistrationRequest req;
+    req.header(REGISTRATION_CODE);
     if (!check_name(name)){
         return false;
     }
     req.header.payload_size = sizeof(req.payload);
-    strcpy_s(req.payload.client_name, CLIENT_NAME_SIZE, name.c_str());
-    std::count << req;
-    // sHandler->send_and_receive()
+    //strcpy(treq.payload.client_name, CLIENT_NAME_SIZE, name.c_str());
+    std::cout << req;
+    // sHandler->send_and_re`ceive()
     return true;
-}
-
-ostream& operator << (ostream& os, const RegistrationRequest& req)
-{
-   return os << "header_code: " << req.header.code <<
-              "version: " << req.header.version << 
-              << " Payload:" << req.payload << endl;
 }

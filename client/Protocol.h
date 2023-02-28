@@ -10,7 +10,7 @@ constexpr size_t CLIENT_ID_SIZE = 16;
 constexpr size_t CLIENT_NAME_SIZE = 255;
 constexpr size_t PUBLIC_KEY_SIZE = 160;  // defined in protocol. 1024 bits.
 constexpr size_t SYMMETRIC_KEY_SIZE = 16;   // defined in protocol.  128 bits.
-
+constexpr code_t REGISTRATION_CODE = 1000;
 
 struct RequestHeader {
     std::string client_id;
@@ -26,7 +26,7 @@ struct RequestHeader {
 };
 
 struct RegistrationRequest {
-    RequestHeader header(code=1000);
+    RequestHeader header(code_t);
     struct {
         std::string client_name;
     }payload;
