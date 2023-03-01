@@ -1,12 +1,9 @@
 import os
-import uuid
-from database import Database
 from client import Client
 from server import Server
 
 FILEPATH = "port.info"
 DEFAULT_PORT = 1234
-SERVER_DB = "server.db"
 HOST = "127.0.0.1"
 
 
@@ -21,16 +18,6 @@ def get_port():
 def main():
     port = get_port()
     server = Server(HOST, port)
-
-    d = Database(SERVER_DB)
-    d.connect()
-    d.initialize()
-    name = "hadar"
-    if d.check_if_client_exist(name) is False:
-        c = Client(uuid.uuid4().hex, "hadar", "", "", "")
-        d.insert_client(c)
-    else:
-        print("Client with name: {} already exist".format(name))
 
     # clients = d.get_clients()
     # print(clients)

@@ -9,7 +9,7 @@ CLIENT_CONTENT_SIZE = 4
 CLIENT_FILE_NAME = 255
 
 
-class RequestHandler:
+class RequestResponseHandler:
     def __init__(self):
         self.header_size = CLIENT_ID_SIZE + HEADER_SIZE_WITHOUT_CLIENT_ID
         self.client_id = b""
@@ -24,8 +24,6 @@ class RequestHandler:
             self.id = struct.unpack(f"<{CLIENT_ID_SIZE}s", data[:CLIENT_ID_SIZE])[0]
             header_data = data[CLIENT_ID_SIZE:CLIENT_ID_SIZE + HEADER_SIZE_WITHOUT_CLIENT_ID]
             self.version, self.code, self.payload_size = struct.unpack("<BHL", header_data)
-            #nameData = data[self.header_size:self.header_size + CLIENT_NAME_SIZE]
-            #name = str(struct.unpack(f"<{CLIENT_NAME_SIZE}s", nameData)[0].partition(b'\0')[0].decode('utf-8'))
             return True
         except Exception as e:
             return False

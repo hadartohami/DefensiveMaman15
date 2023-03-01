@@ -1,8 +1,9 @@
 import selectors
 import socket
-from requestHandler import *
+from requestResponseHandler import *
 import struct 
 
+SERVER_DB = "server.db"
 PACKET_SIZE = 1024
 
 
@@ -11,10 +12,18 @@ class Server:
         self.host = host
         self.port = port
         self.sel = selectors.DefaultSelector()
-        self.requestHandler = RequestHandler()
+        self.database = Database(SERVER_DB)
+        self.requestResponseHandler = RequestResponseHandler(self.database)
+        
+
+    def initilize_database(self):
+        self.database.connect()
+        self.database.initialize()
+    
 
     def start(self):
         try:
+            self.initilize_database()
             sock = socket.socket()
             sock.bind((self.host, int(self.port)))
             sock.listen()
@@ -38,17 +47,16 @@ class Server:
     def read(self, conn, mask):
         data = conn.recv(PACKET_SIZE)  # Should be ready
         if data:
-            self.requestHandler.handler_headers(data)
-            self.requestHandler.print_headers()
-            if self.requestHandler.handle_registration_request(data):
-                print("Client Name: {}".format(self.requestHandler.client_name))
-            #self.write(conn, "testing")
-            # get_headers = self.requestHandler.handler_headers(data)
-            # if get_headers:
-            #     self.requestHandler.print_headers()
-            #     #print('echoing', repr(data), 'to', conn)
-            # else:
-            #     print("Couldn't parse headers")
+            if self.requestResponseHandler.handle_request_headers(data):
+                self.requestResponseHandler.print_request_headers() # need to remove
+                if self.requestResponseHandler.request_headers.code == REGISTRATION_REQUEST_CODE:
+                    if self.requestResponseHandler.handle_registration_request(data):
+                        registration_response = self.requestResponseHandler.get_registration_response()
+                        self.write(conn, registration_response)
+                    else:
+                        print("Couldn't handle registration request")
+            else:
+                 print("Couldn't parse headers")
         else:
             print('closing', conn)
             self.sel.unregister(conn)

@@ -26,10 +26,6 @@ bool RequestResponseHandler::check_name(std::string name) {
     return true;
 }
 
-// ostream& operator<<(ostream& os, const RegistrationRequest& req)
-// {
-//    return os << "payload: " << "ddcbfghfhf" << endl;
-// }
 
 bool RequestResponseHandler::registration_request(std::string name){
     std::cout << "[ DEBUG ] in registration request" << std::endl;
@@ -40,7 +36,8 @@ bool RequestResponseHandler::registration_request(std::string name){
     std::string client_name = name;
     std::strcpy(reinterpret_cast<char*>(request.payload.client_name.name), client_name.c_str());
     request.header.payload_size = sizeof(request.payload);
-    socket_handler->send(reinterpret_cast<uint8_t*>(&request), sizeof(request));
+    response
+    socket_handler->send_and_receive(reinterpret_cast<uint8_t*>(&request), sizeof(request), reinterpret_cast<uint8_t*>(&response), sizeof(response));
     return true;
     
 }

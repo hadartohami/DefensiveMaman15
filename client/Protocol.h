@@ -5,7 +5,7 @@ typedef uint8_t version_t;
 typedef uint16_t code_t;
 typedef uint32_t csize_t;
 
-constexpr version_t CLIENT_VERSION = 3;
+constexpr version_t SERVER_VERSION = 3;
 constexpr size_t CLIENT_ID_SIZE = 16;
 constexpr size_t CLIENT_NAME_SIZE = 255;
 constexpr size_t PUBLIC_KEY_SIZE = 160;  // defined in protocol. 1024 bits.
@@ -34,11 +34,19 @@ struct RequestHeader {
     const code_t code;
     csize_t payload_size;
 
-    RequestHeader(const code_t request_code) : version(CLIENT_VERSION), code(request_code), payload_size(0) {}
-	RequestHeader(const ClientID& id, const code_t request_code) : client_id(id), version(CLIENT_VERSION), code(request_code), payload_size(0) {}
+    RequestHeader(const code_t request_code) : version(SERVER_VERSION), code(request_code), payload_size(0) {}
+	RequestHeader(const ClientID& id, const code_t request_code) : client_id(id), version(SERVER_VERSION), code(request_code), payload_size(0) {}
 
 };
 
+struct ResponseHeader {
+    const version_t version;
+    const code_t code;
+    csize_t payload_size;
+
+    ResponseHeader() : version(0), code(0), payload_size(0) {}
+
+};
 struct RequestRegistration
 {
 	RequestHeader header;
