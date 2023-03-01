@@ -5,7 +5,7 @@
 
 class RequestResponseHandler{
 private:
-    SocketHandler* socketHandler;
+    SocketHandler* socket_handler;
 
 public:
     RequestResponseHandler(SocketHandler *s);

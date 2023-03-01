@@ -14,6 +14,7 @@ private:
     boost::asio::io_context*  io_context;
     tcp::resolver* resolver;
     tcp::socket*   socket;
+    bool _bigEndian;
     bool connected;
 public:
     SocketHandler (std::string address, std::string port);
@@ -24,5 +25,6 @@ public:
     bool receive(uint8_t* const buffer, const size_t size);
     bool send(const uint8_t* const buffer, const size_t size);
     bool send_and_receive(const uint8_t* send_data, const size_t size, uint8_t* const response, const size_t response_size);
+    void swapBytes(uint8_t* const buffer, size_t size) const;
 };
 #endif

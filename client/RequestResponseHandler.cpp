@@ -2,7 +2,7 @@
 #include "Protocol.h"
 using namespace std;
 
-RequestResponseHandler::RequestResponseHandler(SocketHandler *s): socketHandler(s){
+RequestResponseHandler::RequestResponseHandler(SocketHandler *s): socket_handler(s){
     // TODO: this should happen before emitting requests
     try{
         s->connect();
@@ -10,6 +10,7 @@ RequestResponseHandler::RequestResponseHandler(SocketHandler *s): socketHandler(
     catch (const std::exception &e) {
         std::cerr << "Couldn't connect to Server" << std::endl;
     }
+    
 }
 
 RequestResponseHandler::~RequestResponseHandler(){
@@ -32,15 +33,14 @@ bool RequestResponseHandler::check_name(std::string name) {
 
 bool RequestResponseHandler::registration_request(std::string name){
     std::cout << "[ DEBUG ] in registration request" << std::endl;
-    //RegistrationRequest req(REGISTRATION_CODE);
-    //req.header.code = REGISTRATION_CODE);
     if (!check_name(name)){
         return false;
     }
-    //req.header.payload_size = sizeof(req.payload);
-    //strcpy(treq.payload.client_name, CLIENT_NAME_SIZE, name.c_str());
-    //std::cout << req;
-    // socketHandler->send_and_receive()
+    RequestRegistration request;
+    std::string client_name = name;
+    std::strcpy(reinterpret_cast<char*>(request.payload.client_name.name), client_name.c_str());
+    request.header.payload_size = sizeof(request.payload);
+    socket_handler->send(reinterpret_cast<uint8_t*>(&request), sizeof(request));
     return true;
     
 }

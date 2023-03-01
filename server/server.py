@@ -1,6 +1,7 @@
 import selectors
 import socket
-from requestHandler import RequestHandler
+from requestHandler import *
+import struct 
 
 PACKET_SIZE = 1024
 
@@ -37,12 +38,17 @@ class Server:
     def read(self, conn, mask):
         data = conn.recv(PACKET_SIZE)  # Should be ready
         if data:
-            get_headers = self.requestHandler.handler_headers(data)
-            if get_headers:
-                self.requestHandler.print_headers()
-                print('echoing', repr(data), 'to', conn)
-            else:
-                print("Couldn't parse headers")
+            self.requestHandler.handler_headers(data)
+            self.requestHandler.print_headers()
+            if self.requestHandler.handle_registration_request(data):
+                print("Client Name: {}".format(self.requestHandler.client_name))
+            #self.write(conn, "testing")
+            # get_headers = self.requestHandler.handler_headers(data)
+            # if get_headers:
+            #     self.requestHandler.print_headers()
+            #     #print('echoing', repr(data), 'to', conn)
+            # else:
+            #     print("Couldn't parse headers")
         else:
             print('closing', conn)
             self.sel.unregister(conn)

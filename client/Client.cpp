@@ -3,6 +3,9 @@
 #include <fstream>
 #include "SocketHandler.cpp"
 #include "RequestResponseHandler.h"
+#include "Protocol.h"
+
+#pragma once
 
 Client::Client(std::string n): name(n){
 }
@@ -18,35 +21,13 @@ bool Client::start_client(){
         if (transfer_info == true){
             SocketHandler* socket_handler = new SocketHandler(this->address, this->port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
-            std::string name = "hadar";
-            // int* buf = convert_string_to_hex(name);
-
-            std::byte bytes[name.length()];
-            std::memcpy(bytes, name.data(), name.length());
-
-            socket_handler->send(*reinterpret_cast<int*>(bytes), sizeof(bytes));
-            
-            //0x68,0x61,0x64,0x61,0x72~> Hadar
-            // uint8_t tempBuffer[5] = buf;
-            // socket_handler->send(tempBuffer, sizeof(tempBuffer));
-
-            // First registration
-            // req_res_handler->registration_request(name);
+            req_res_handler->registration_request(this->name);
         }else{
             // TODO: exit(1) with error for no configurations
         }
     }
     //transfer = Client:get_transfer_info();
 }
-
-// int convert_string_to_hex(std::string s){
-//     int buffer[s.length() * 8]; // 8 bytes per char
-//     for(int i=0; i<sizeof(s); i++){
-//         buffer[i] = int(s[i]);
-//     }
-//     return buffer;
-// }
-
 
 
 // Checking whether the file is open. if open gets address and port from TRANSFER_INFO file
@@ -111,3 +92,4 @@ void Client::set_client_info(){
 void Client::print_client_info(){
     std::cout << this->name << std::endl;
 }
+
