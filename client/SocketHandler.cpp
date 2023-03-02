@@ -77,7 +77,7 @@ bool SocketHandler::is_connected(){
 }
 
 bool SocketHandler::receive(uint8_t* const buffer, const size_t size){
-    if(is_connected() || buffer == nullptr || size == 0)
+    if(!is_connected() || buffer == nullptr || size == 0)
         return false;
 
     size_t num_of_bytes_to_send = size;
@@ -101,7 +101,7 @@ bool SocketHandler::receive(uint8_t* const buffer, const size_t size){
         buffer_ptr       += bytesToCopy;
         num_of_bytes_to_send = (num_of_bytes_to_send < bytesToCopy) ? 0 : (num_of_bytes_to_send - bytesToCopy);  // unsigned protection.
     }
-
+    std::cout << "Got all bytes in socket handler, returning" << std::endl;
     return true;
 }
 
@@ -127,7 +127,7 @@ bool SocketHandler::send(const uint8_t* buffer, const size_t size){
 
         const size_t bytesWritten = write(*socket, boost::asio::buffer(tempBuffer, PACKET_SIZE), errorCode); // write() will not throw exception when error_code is passed as argument.
         if (bytesWritten == 0){
-            std::cout << "Wrote 0 bytes in socket handler";
+            std::cout << "Wrote 0 bytes in socket handler" << std::endl;
             return false;
         }
         // TODO: check if errorCode is not null
@@ -138,7 +138,7 @@ bool SocketHandler::send(const uint8_t* buffer, const size_t size){
         buffer_ptr += bytesWritten;
         num_of_bytes_to_send = (num_of_bytes_to_send < bytesWritten) ? 0 : (num_of_bytes_to_send - bytesWritten);  // unsigned protection.
     }
-    std::cout << "Wrote all bytes in socket handler, returning";
+    std::cout << "Wrote all bytes in socket handler, returning" << std::endl;
     return true;
 }
 

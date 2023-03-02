@@ -33,11 +33,14 @@ bool RequestResponseHandler::registration_request(std::string name){
         return false;
     }
     RequestRegistration request;
+    ResponseRegistration response;
     std::string client_name = name;
     std::strcpy(reinterpret_cast<char*>(request.payload.client_name.name), client_name.c_str());
     request.header.payload_size = sizeof(request.payload);
-    response
-    socket_handler->send_and_receive(reinterpret_cast<uint8_t*>(&request), sizeof(request), reinterpret_cast<uint8_t*>(&response), sizeof(response));
+    if(!socket_handler->send_and_receive(reinterpret_cast<uint8_t*>(&request), sizeof(request), reinterpret_cast<uint8_t*>(&response), sizeof(response))){
+        return false;
+    }
+    std::cout << response.header.code << std::endl;
     return true;
     
 }

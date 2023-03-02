@@ -43,10 +43,10 @@ struct ResponseHeader {
     const version_t version;
     const code_t code;
     csize_t payload_size;
-
     ResponseHeader() : version(0), code(0), payload_size(0) {}
 
 };
+
 struct RequestRegistration
 {
 	RequestHeader header;
@@ -55,6 +55,12 @@ struct RequestRegistration
 		ClientName client_name;
 	}payload;
 	RequestRegistration() : header(REQUEST_REGISTRATION_CODE) {}
+};
+
+struct ResponseRegistration
+{
+	ResponseHeader header;
+    ClientID payload;
 };
 
 #pragma pack(pop)

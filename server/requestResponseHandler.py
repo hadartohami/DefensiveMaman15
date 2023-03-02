@@ -17,7 +17,10 @@ DEFAULT_VALUE = 0
 REGISTRATION_REQUEST_CODE = 1100
 
 
+
 REGISTRATION_RESPONSE_CODE = 2100
+REGISTRATION_RESPONSE_ERROR_CODE = 2101
+
 
 class RequestHeaders:
     def __init__(self):
@@ -63,7 +66,6 @@ class RequestResponseHandler:
             return False
     
     def get_registration_response(self):
-        self.response_headers.code = REGISTRATION_RESPONSE_CODE
         self.response_headers.payload_size = CLIENT_ID_SIZE
         try:
             if self.client_name:
@@ -72,15 +74,16 @@ class RequestResponseHandler:
                     client_id = clnt.id
                     self.response_headers.client_id = client_id
                     self.database.insert_client(clnt)
-                    data = self.pack_reponse_headers()
                     data += struct.pack(f"<{CLIENT_ID_SIZE}s", self.response_headers.client_id)
+                    self.response_headers.code = REGISTRATION_RESPONSE_CODE
+                    data = self.pack_reponse_headers()
                     return data
                 else:
                     raise Exception("Client with name: {} already exist".format(self.client_name))
-            
         except Exception as e:
-            print(e)
-            return b""
+            self.response_headers.code = REGISTRATION_RESPONSE_ERROR_CODE
+            data = self.pack_reponse_headers()
+            return data
 
     def pack_reponse_headers(self):
         return struct.pack("<BHL", self.response_headers.version, self.response_headers.code, self.response_headers.payload_size)
