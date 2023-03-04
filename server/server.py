@@ -58,6 +58,7 @@ class Server:
                 if self.requestResponseHandler.request_headers.code == SEND_PUBLIC_KEY_REQUEST_CODE:
                     if self.requestResponseHandler.handle_send_public_key_request(data):
                         print("got public key")
+                        print(self.requestResponseHandler.public_key)
                         #send_public_key_response = self.requestResponseHandler.get_send_AES_key_response()
                         #self.write(conn, registration_response)
                     else:

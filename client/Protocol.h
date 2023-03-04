@@ -66,4 +66,22 @@ struct ResponseRegistration
     ClientID payload;
 };
 
+
+struct PublicKey
+{
+	uint8_t public_key[PUBLIC_KEY_SIZE];
+	PublicKey() : public_key{ 0 } {}
+};
+
+
+struct RequestPublicKey
+{
+	ResponseHeader header;
+	struct
+	{
+		ClientID   client_id;
+		PublicKey  client_public_key;
+	}payload;
+};
+
 #pragma pack(pop)

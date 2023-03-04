@@ -3,7 +3,6 @@
 #include <fstream>
 #include "SocketHandler.cpp"
 #include "RequestResponseHandler.h"
-#include "Protocol.h"
 
 #pragma once
 
@@ -22,13 +21,14 @@ bool Client::start_client(){
             SocketHandler* socket_handler = new SocketHandler(this->address, this->port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
             if (req_res_handler->registration_request(this->name)){
-                req_res_handler->send_public_key_request(this->name)
+                req_res_handler->send_public_key_request(this->name);
             }
         }else{
             // TODO: exit(1) with error for no configurations
         }
     }
     //transfer = Client:get_transfer_info();
+    return true;
 }
 
 
