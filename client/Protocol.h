@@ -5,6 +5,7 @@ typedef uint8_t version_t;
 typedef uint16_t code_t;
 typedef uint32_t csize_t;
 
+
 constexpr version_t SERVER_VERSION = 3;
 constexpr size_t CLIENT_ID_SIZE = 16;
 constexpr size_t CLIENT_NAME_SIZE = 255;
@@ -28,7 +29,8 @@ struct ClientName
 	ClientName() : name{ '\0' } {}
 };
 
-struct RequestHeader {
+struct RequestHeader 
+{
     ClientID client_id;
     const version_t version;
     const code_t code;
@@ -39,7 +41,8 @@ struct RequestHeader {
 
 };
 
-struct ResponseHeader {
+struct ResponseHeader 
+{
     const version_t version;
     const code_t code;
     csize_t payload_size;

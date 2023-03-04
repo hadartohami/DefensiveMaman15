@@ -26,7 +26,6 @@ bool RequestResponseHandler::check_name(std::string name) {
     return true;
 }
 
-
 bool RequestResponseHandler::registration_request(std::string name){
     std::cout << "[ DEBUG ] in registration request" << std::endl;
     if (!check_name(name)){
@@ -41,6 +40,26 @@ bool RequestResponseHandler::registration_request(std::string name){
         return false;
     }
     std::cout << response.header.code << std::endl;
+    std::cout << response.header.version << std::endl;
+    std::cout << response.header.payload_size << std::endl;
+    std::cout << response.payload.uuid << std::endl;
+    return true;
+    
+}
+
+bool RequestResponseHandler::send_public_key_request(){
+    std::cout << "[ DEBUG ] in send public key request" << std::endl;
+    RequestRegistration request;
+    ResponseRegistration response;
+    std::strcpy(reinterpret_cast<char*>(request.payload.client_name.name), client_name.c_str());
+    request.header.payload_size = sizeof(request.payload);
+    if(!socket_handler->send_and_receive(reinterpret_cast<uint8_t*>(&request), sizeof(request), reinterpret_cast<uint8_t*>(&response), sizeof(response))){
+        return false;
+    }
+    std::cout << response.header.code << std::endl;
+    std::cout << response.header.version << std::endl;
+    std::cout << response.header.payload_size << std::endl;
+    std::cout << response.payload.uuid << std::endl;
     return true;
     
 }

@@ -15,7 +15,7 @@ DEFAULT_VALUE = 0
 
 
 REGISTRATION_REQUEST_CODE = 1100
-
+SEND_PUBLIC_KEY_REQUEST_CODE = 1101
 
 
 REGISTRATION_RESPONSE_CODE = 2100
@@ -41,6 +41,7 @@ class ResponseHeaders:
 class RequestResponseHandler:
     def __init__(self, database):
         self.database = database
+        self.public_key = b""
         self.client_name = b""
         self.request_headers = RequestHeaders()
         self.response_headers = ResponseHeaders()
@@ -56,6 +57,9 @@ class RequestResponseHandler:
 
     def print_request_headers(self):
         print("Client ID: {}\nPayload Size: {}\nCode: {}\nVersion: {}".format(self.request_headers.client_id, self.request_headers.payload_size, self.request_headers.code, self.request_headers.version))
+
+    def pack_reponse_headers(self):
+        return struct.pack("<BHL", self.response_headers.version, self.response_headers.code, self.response_headers.payload_size)
 
     def handle_registration_request(self, data):
         try:
@@ -74,19 +78,47 @@ class RequestResponseHandler:
                     client_id = clnt.id
                     self.response_headers.client_id = client_id
                     self.database.insert_client(clnt)
-                    data += struct.pack(f"<{CLIENT_ID_SIZE}s", self.response_headers.client_id)
                     self.response_headers.code = REGISTRATION_RESPONSE_CODE
                     data = self.pack_reponse_headers()
+                    data += struct.pack(f"<{CLIENT_ID_SIZE}s", self.response_headers.client_id)
                     return data
                 else:
                     raise Exception("Client with name: {} already exist".format(self.client_name))
         except Exception as e:
             self.response_headers.code = REGISTRATION_RESPONSE_ERROR_CODE
+            self.response_headers.payload_size = 0
             data = self.pack_reponse_headers()
             return data
 
-    def pack_reponse_headers(self):
-        return struct.pack("<BHL", self.response_headers.version, self.response_headers.code, self.response_headers.payload_size)
+    def handle_send_public_key_request(self, data):
+        try:
+            name_data = data[self.request_headers.header_size:self.request_headers.header_size + CLIENT_NAME_SIZE]
+            self.client_name = str(struct.unpack(f"<{CLIENT_NAME_SIZE}s", name_data)[0].partition(b'\0')[0].decode('utf-8'))
+            key_data = data[self.request_headers.header_size + CLIENT_NAME_SIZE:self.request_headers.header_size + CLIENT_NAME_SIZE + CLIENT_PUBLIC_KEY_SIZE]
+            self.public_key = struct.unpack(f"<{CLIENT_PUBLIC_KEY_SIZE}s", key_data)[0]
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
-
-
+        
+    # def get_send_AES_key_response(self):
+    #     self.response_headers.payload_size = CLIENT_ID_SIZE
+    #     try:
+    #         if self.client_name:
+    #             if self.database.check_if_client_exist(self.client_name) is False:
+    #                 clnt = Client(uuid.uuid4().hex, self.client_name, "", str(datetime.now()), "")
+    #                 client_id = clnt.id
+    #                 self.response_headers.client_id = client_id
+    #                 self.database.insert_client(clnt)
+    #                 self.response_headers.code = REGISTRATION_RESPONSE_CODE
+    #                 data = self.pack_reponse_headers()
+    #                 data += struct.pack(f"<{CLIENT_ID_SIZE}s", self.response_headers.client_id)
+    #                 return data
+    #             else:
+    #                 raise Exception("Client with name: {} already exist".format(self.client_name))
+    #     except Exception as e:
+    #         self.response_headers.code = REGISTRATION_RESPONSE_ERROR_CODE
+    #         self.response_headers.payload_size = 0
+    #         data = self.pack_reponse_headers()
+    #         return data

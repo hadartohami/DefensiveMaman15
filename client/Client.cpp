@@ -21,7 +21,9 @@ bool Client::start_client(){
         if (transfer_info == true){
             SocketHandler* socket_handler = new SocketHandler(this->address, this->port);
             RequestResponseHandler* req_res_handler = new RequestResponseHandler(socket_handler);
-            req_res_handler->registration_request(this->name);
+            if (req_res_handler->registration_request(this->name)){
+                req_res_handler->send_public_key_request(this->name)
+            }
         }else{
             // TODO: exit(1) with error for no configurations
         }
