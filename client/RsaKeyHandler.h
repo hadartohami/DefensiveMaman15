@@ -15,6 +15,11 @@ private:
 
 public:
     RsaKeyHandler();
+    RsaKeyHandler(std::string &key);
     ~RsaKeyHandler();
+    std::string RsaKeyHandler::get_private_key();
+    std::string RsaKeyHandler::get_public_key();
+    std::string RsaKeyHandler::encrypt(const uint8_t* plain, size_t length);
+    std::string RsaKeyHandler::decrypt(const uint8_t* cipher, size_t length);
 };
 #endif
